@@ -1,0 +1,134 @@
+<?php
+
+namespace App\Repositories;
+
+use config\Database;
+use PDO;
+use Exception;
+
+class JalurRepository
+{
+  private PDO $db;
+  public function __construct()
+  {
+    $this->db = Database::getInstance();
+  }
+
+  /**
+   * Mengambil semua data jalur dari database dengan limit dan offset.
+   */
+  public function findAll(int $offset, int $limit): array
+  {
+    // Hitung total data untuk paginasi
+    $stmt = $this->db->query("SELECT COUNT(*) as total FROM jalur");
+    $total = (int)$stmt->fetchColumn();
+
+    // Ambil data jalur sesuai paginasi
+    $query = "
+            SELECT id, nama, desa, kecamatan, kabupaten, provinsi, deskripsi
+            FROM jalur
+            ORDER BY nama
+            LIMIT :limit OFFSET :offset
+        ";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return ['data' => $data, 'total' => $total];
+  }
+
+  /**
+   * Membuat data jalur baru dalam transaksi database.
+   */
+  public function create(array $data): array
+  {
+    $this->db->beginTransaction();
+    try {
+      // 1. Masukkan data ke tabel 'jalur'
+      $jalurSql = "
+                INSERT INTO jalur (nama, desa, kecamatan, kabupaten, provinsi, deskripsi)
+                VALUES (:nama, :desa, :kecamatan, :kabupaten, :provinsi, :deskripsi);
+            ";
+      $stmt = $this->db->prepare($jalurSql);
+      $stmt->execute([
+        'nama' => $data['nama'],
+        'desa' => $data['desa'],
+        'kecamatan' => $data['kecamatan'],
+        'kabupaten' => $data['kabupaten'],
+        'provinsi' => $data['provinsi'],
+        'deskripsi' => $data['deskripsi'] ?? null
+      ]);
+      $jalurId = $this->db->lastInsertId();
+
+      // Ambil data jalur yang baru dibuat
+      $jalurBaru = $this->findById($jalurId);
+
+      // 2. Masukkan data ke tabel 'medsos' jika ada
+      $medsosBaru = [];
+      if (!empty($data['medsos']) && is_array($data['medsos'])) {
+        $medsosSql = "INSERT INTO medsos (media, link, jalur_id) VALUES (:media, :link, :jalur_id);";
+        $stmt = $this->db->prepare($medsosSql);
+        foreach ($data['medsos'] as $item) {
+          $stmt->execute([
+            'media' => $item['media'],
+            'link' => $item['link'],
+            'jalur_id' => $jalurId
+          ]);
+          $medsosId = $this->db->lastInsertId();
+          $medsosBaru[] = $this->findMedsosById($medsosId);
+        }
+      }
+
+      // 3. Masukkan data ke tabel 'galeri' jika ada
+      $galeriBaru = [];
+      if (!empty($data['galeri']) && is_array($data['galeri'])) {
+        $galeriSql = "INSERT INTO galeri (image_url, judul, caption, jalur_id) VALUES (:image_url, :judul, :caption, :jalur_id);";
+        $stmt = $this->db->prepare($galeriSql);
+        foreach ($data['galeri'] as $item) {
+          $stmt->execute([
+            'image_url' => $item['image_url'],
+            'judul' => $item['judul'] ?? null,
+            'caption' => $item['caption'] ?? null,
+            'jalur_id' => $jalurId
+          ]);
+          $galeriId = $this->db->lastInsertId();
+          $galeriBaru[] = $this->findGaleriById($galeriId);
+        }
+      }
+
+      $this->db->commit();
+
+      // Gabungkan semua hasil
+      return array_merge($jalurBaru, ['medsos' => $medsosBaru, 'galeri' => $galeriBaru]);
+    } catch (Exception $e) {
+      $this->db->rollBack();
+      // Lemparkan kembali exception untuk ditangani oleh service/controller
+      throw new Exception("Transaksi gagal: " . $e->getMessage());
+    }
+  }
+
+  // Fungsi helper privat untuk mengambil data setelah insert
+  private function findById(string $id): ?array
+  {
+    $stmt = $this->db->prepare("SELECT * FROM jalur WHERE id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+  }
+
+  private function findMedsosById(string $id): ?array
+  {
+    $stmt = $this->db->prepare("SELECT * FROM medsos WHERE id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+  }
+
+  private function findGaleriById(string $id): ?array
+  {
+    $stmt = $this->db->prepare("SELECT * FROM galeri WHERE id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+  }
+}
