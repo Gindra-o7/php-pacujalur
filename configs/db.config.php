@@ -5,7 +5,7 @@ namespace Config;
 use PDO;
 use PDOException;
 
-class Database
+class DatabaseConfig
 {
   private static $instance = null;
 

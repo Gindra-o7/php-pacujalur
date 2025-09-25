@@ -8,23 +8,23 @@ use Exception;
 
 class GlobalHandler
 {
-  public static function introduce()
+  public static function introduce(): void
   {
     try {
       $introduceMessage = GlobalService::introduce();
-      ResponseHelper::success($introduceMessage);
+      echo json_encode(ResponseHelper::success($introduceMessage), JSON_UNESCAPED_UNICODE);
     } catch (Exception $e) {
-      ResponseHelper::error("Terjadi kesalahan internal.");
+      echo json_encode(ResponseHelper::error("Terjadi kesalahan internal."));
     }
   }
 
-  public static function health()
+  public static function health(): void
   {
     try {
       $healthMessage = GlobalService::health();
-      ResponseHelper::success($healthMessage);
+      echo json_encode(ResponseHelper::success($healthMessage), JSON_UNESCAPED_UNICODE);
     } catch (Exception $e) {
-      ResponseHelper::error("Terjadi kesalahan internal.");
+      echo json_encode(ResponseHelper::error("Terjadi kesalahan internal."));
     }
   }
 }

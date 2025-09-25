@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use config\Database;
+use config\DatabaseConfig;
 use PDO;
 use Exception;
 
@@ -11,19 +11,13 @@ class JalurRepository
   private PDO $db;
   public function __construct()
   {
-    $this->db = Database::getInstance();
+    $this->db = DatabaseConfig::getInstance();
   }
-
-  /**
-   * Mengambil semua data jalur dari database dengan limit dan offset.
-   */
   public function findAll(int $offset, int $limit): array
   {
-    // Hitung total data untuk paginasi
     $stmt = $this->db->query("SELECT COUNT(*) as total FROM jalur");
     $total = (int)$stmt->fetchColumn();
 
-    // Ambil data jalur sesuai paginasi
     $query = "
             SELECT id, nama, desa, kecamatan, kabupaten, provinsi, deskripsi
             FROM jalur
@@ -40,14 +34,10 @@ class JalurRepository
     return ['data' => $data, 'total' => $total];
   }
 
-  /**
-   * Membuat data jalur baru dalam transaksi database.
-   */
   public function create(array $data): array
   {
     $this->db->beginTransaction();
     try {
-      // 1. Masukkan data ke tabel 'jalur'
       $jalurSql = "
                 INSERT INTO jalur (nama, desa, kecamatan, kabupaten, provinsi, deskripsi)
                 VALUES (:nama, :desa, :kecamatan, :kabupaten, :provinsi, :deskripsi);
@@ -63,10 +53,8 @@ class JalurRepository
       ]);
       $jalurId = $this->db->lastInsertId();
 
-      // Ambil data jalur yang baru dibuat
       $jalurBaru = $this->findById($jalurId);
 
-      // 2. Masukkan data ke tabel 'medsos' jika ada
       $medsosBaru = [];
       if (!empty($data['medsos']) && is_array($data['medsos'])) {
         $medsosSql = "INSERT INTO medsos (media, link, jalur_id) VALUES (:media, :link, :jalur_id);";
@@ -82,7 +70,6 @@ class JalurRepository
         }
       }
 
-      // 3. Masukkan data ke tabel 'galeri' jika ada
       $galeriBaru = [];
       if (!empty($data['galeri']) && is_array($data['galeri'])) {
         $galeriSql = "INSERT INTO galeri (image_url, judul, caption, jalur_id) VALUES (:image_url, :judul, :caption, :jalur_id);";
@@ -101,16 +88,13 @@ class JalurRepository
 
       $this->db->commit();
 
-      // Gabungkan semua hasil
       return array_merge($jalurBaru, ['medsos' => $medsosBaru, 'galeri' => $galeriBaru]);
     } catch (Exception $e) {
       $this->db->rollBack();
-      // Lemparkan kembali exception untuk ditangani oleh service/controller
       throw new Exception("Transaksi gagal: " . $e->getMessage());
     }
   }
 
-  // Fungsi helper privat untuk mengambil data setelah insert
   private function findById(string $id): ?array
   {
     $stmt = $this->db->prepare("SELECT * FROM jalur WHERE id = ?");
