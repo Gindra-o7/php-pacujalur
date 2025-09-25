@@ -16,30 +16,46 @@ class JalurHandler
     $this->jalurService = new JalurService();
   }
 
-  /**
-   * Meng-handle permintaan untuk mendapatkan semua data jalur dengan paginasi.
-   */
   public function getAll()
   {
     try {
-      // Ambil parameter paginasi dari query string (?page=...&limit=...)
       ['page' => $page, 'limit' => $limit] = PaginationHelper::parsePaginationQuery();
 
       $result = $this->jalurService->getAll($page, $limit);
 
-      ResponseHelper::success($result, "Data jalur berhasil didapatkan");
+      echo json_encode(ResponseHelper::success($result, "Data jalur berhasil didapatkan"), JSON_UNESCAPED_UNICODE);
     } catch (Exception $e) {
-      ResponseHelper::error("Gagal mendapatkan data jalur: " . $e->getMessage());
+      echo json_encode(ResponseHelper::error("Gagal mendapatkan data jalur: " . $e->getMessage()));
     }
   }
 
-  /**
-   * Meng-handle permintaan untuk membuat data jalur baru.
-   */
+  public function getById()
+  {
+    try {
+      // Extract ID from URL path
+      $pathParts = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
+      $id = end($pathParts);
+
+      if (empty($id)) {
+        echo json_encode(ResponseHelper::badRequest('ID jalur diperlukan'));
+        return;
+      }
+
+      $result = $this->jalurService->getById($id);
+
+      if ($result) {
+        echo json_encode(ResponseHelper::success($result, "Data jalur berhasil didapatkan"), JSON_UNESCAPED_UNICODE);
+      } else {
+        echo json_encode(ResponseHelper::notFound('Data jalur tidak ditemukan'));
+      }
+    } catch (Exception $e) {
+      echo json_encode(ResponseHelper::error("Gagal mendapatkan data jalur: " . $e->getMessage()));
+    }
+  }
+
   public function create()
   {
     try {
-      // Ambil data JSON dari body permintaan
       $data = json_decode(file_get_contents('php://input'), true);
 
       if (json_last_error() !== JSON_ERROR_NONE) {
@@ -49,10 +65,9 @@ class JalurHandler
 
       $result = $this->jalurService->create($data);
 
-      ResponseHelper::created($result, "Data jalur berhasil ditambahkan");
+      echo json_encode(ResponseHelper::created($result, "Data jalur berhasil ditambahkan"), JSON_UNESCAPED_UNICODE);
     } catch (Exception $e) {
-      // Jika ada error validasi atau lainnya dari service
-      ResponseHelper::badRequest($e->getMessage());
+      echo json_encode(ResponseHelper::badRequest($e->getMessage()));
     }
   }
 }
