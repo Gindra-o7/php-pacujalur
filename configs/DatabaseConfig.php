@@ -14,11 +14,11 @@ class DatabaseConfig
   public static function getInstance(): PDO
   {
     if (self::$instance === null) {
-      $host = $_ENV['DB_HOST'];
-      $db   = $_ENV['DB_DATABASE'];
-      $user = $_ENV['DB_USERNAME'];
-      $pass = $_ENV['DB_PASSWORD'];
-      $port = $_ENV['DB_PORT'];
+      $host = $_ENV['DB_HOST'] ?? 'localhost';
+      $db   = $_ENV['DB_DATABASE'] ?? 'pacujalur_db';
+      $user = $_ENV['DB_USERNAME'] ?? 'root';
+      $pass = $_ENV['DB_PASSWORD'] ?? '';
+      $port = $_ENV['DB_PORT'] ?? '3306';
       $charset = 'utf8mb4';
 
       $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";

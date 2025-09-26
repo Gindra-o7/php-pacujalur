@@ -14,17 +14,11 @@ class JalurRepository
   {
     $this->db = DatabaseConfig::getInstance();
   }
-
-  /**
-   * Mengambil semua jalur dengan paginasi dan relasi
-   */
   public function findAll(int $offset, int $limit): array
   {
-    // Hitung total data
     $stmt = $this->db->query("SELECT COUNT(*) as total FROM jalur");
     $total = (int)$stmt->fetchColumn();
 
-    // Query utama untuk mengambil jalur
     $query = "
       SELECT id, nama, desa, kecamatan, kabupaten, provinsi, deskripsi
       FROM jalur

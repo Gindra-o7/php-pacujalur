@@ -19,7 +19,8 @@
   },
   "scripts": {
     "test": "phpunit",
-    "serve": "php -S localhost:8000 -t public"
+    "serve": "php -S localhost:8000 -t public",
+    "dump-autoload": "composer dump-autoload -o"
   },
   "config": {
     "optimize-autoloader": true,

@@ -3,7 +3,7 @@
         'name' => 'pacujalur/backend-api',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '54a896f30aa45a51f67e38594af7eb2bfe947f57',
+        'reference' => 'ec9bb7a51a3150c16bec85ab5b509ffb33aba420',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -49,7 +49,7 @@
         'pacujalur/backend-api' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '54a896f30aa45a51f67e38594af7eb2bfe947f57',
+            'reference' => 'ec9bb7a51a3150c16bec85ab5b509ffb33aba420',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

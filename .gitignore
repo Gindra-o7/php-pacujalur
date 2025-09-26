@@ -2,3 +2,8 @@
 
 uploads/
 *.zip
+
+vendor/
+*.lock
+*.phar
+*.bat

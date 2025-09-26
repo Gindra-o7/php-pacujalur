@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use Configs\DatabaseConfig; // PERBAIKAN: Gunakan namespace yang benar
+use Configs\DatabaseConfig;
 use PDO;
 
 class GaleriRepository

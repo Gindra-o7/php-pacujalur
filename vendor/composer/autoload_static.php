@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4a874fb501c40ac5dfe0c84feee1812c
+class ComposerStaticInit56cb57fd9b92f9a965b8271d6df8f594
 {
     public static $files = array (
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
@@ -119,6 +119,7 @@ class ComposerStaticInit4a874fb501c40ac5dfe0c84feee1812c
         'Firebase\\JWT\\JWTExceptionWithPayloadInterface' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWTExceptionWithPayloadInterface.php',
         'Firebase\\JWT\\Key' => __DIR__ . '/..' . '/firebase/php-jwt/src/Key.php',
         'Firebase\\JWT\\SignatureInvalidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/SignatureInvalidException.php',
+        'Middlewares\\AuthMiddleware' => __DIR__ . '/../..' . '/middlewares/AuthMiddleware.php',
         'PHPUnit\\Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit\\Framework\\ActualValueIsNotAnObjectException' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Exception/ActualValueIsNotAnObjectException.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert.php',
@@ -808,6 +809,11 @@ class ComposerStaticInit4a874fb501c40ac5dfe0c84feee1812c
         'PhpParser\\PrettyPrinterAbstract' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/PrettyPrinterAbstract.php',
         'PhpParser\\PrettyPrinter\\Standard' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/PrettyPrinter/Standard.php',
         'PhpParser\\Token' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Token.php',
+        'Routes\\AuthRoute' => __DIR__ . '/../..' . '/routes/AuthRoute.php',
+        'Routes\\GaleriRoute' => __DIR__ . '/../..' . '/routes/GaleriRoute.php',
+        'Routes\\GlobalRoute' => __DIR__ . '/../..' . '/routes/GlobalRoute.php',
+        'Routes\\JalurRoute' => __DIR__ . '/../..' . '/routes/JalurRoute.php',
+        'Routes\\Router' => __DIR__ . '/../..' . '/routes/Router.php',
         'SebastianBergmann\\CliParser\\AmbiguousOptionException' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/AmbiguousOptionException.php',
         'SebastianBergmann\\CliParser\\Exception' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/Exception.php',
         'SebastianBergmann\\CliParser\\OptionDoesNotAllowArgumentException' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/OptionDoesNotAllowArgumentException.php',
@@ -1021,9 +1027,9 @@ class ComposerStaticInit4a874fb501c40ac5dfe0c84feee1812c
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit4a874fb501c40ac5dfe0c84feee1812c::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit4a874fb501c40ac5dfe0c84feee1812c::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit4a874fb501c40ac5dfe0c84feee1812c::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit56cb57fd9b92f9a965b8271d6df8f594::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit56cb57fd9b92f9a965b8271d6df8f594::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit56cb57fd9b92f9a965b8271d6df8f594::$classMap;
 
         }, null, ClassLoader::class);
     }
