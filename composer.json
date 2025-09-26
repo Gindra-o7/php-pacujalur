@@ -9,7 +9,7 @@
   "autoload": {
     "psr-4": {
       "App\\": "app/",
-      "Config\\": "configs/",
+      "Configs\\": "configs/",
       "Middlewares\\": "middlewares/",
       "Routes\\": "routes/"
     }

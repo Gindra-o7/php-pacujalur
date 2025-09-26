@@ -12,6 +12,6 @@ return array(
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
-    'Config\\' => array($baseDir . '/configs'),
+    'Configs\\' => array($baseDir . '/configs'),
     'App\\' => array($baseDir . '/app'),
 );

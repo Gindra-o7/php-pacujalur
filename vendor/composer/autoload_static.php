@@ -35,7 +35,7 @@ class ComposerStaticInit56cb57fd9b92f9a965b8271d6df8f594
         ),
         'C' => 
         array (
-            'Config\\' => 7,
+            'Configs\\' => 8,
         ),
         'A' => 
         array (
@@ -68,7 +68,7 @@ class ComposerStaticInit56cb57fd9b92f9a965b8271d6df8f594
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Config\\' => 
+        'Configs\\' => 
         array (
             0 => __DIR__ . '/../..' . '/configs',
         ),
@@ -80,6 +80,7 @@ class ComposerStaticInit56cb57fd9b92f9a965b8271d6df8f594
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Configs\\DatabaseConfig' => __DIR__ . '/../..' . '/configs/DatabaseConfig.php',
         'DeepCopy\\DeepCopy' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',
         'DeepCopy\\Exception\\CloneException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/CloneException.php',
         'DeepCopy\\Exception\\PropertyException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/PropertyException.php',
