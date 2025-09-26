@@ -25,7 +25,11 @@ class Router
     return array_merge_recursive(
       GlobalRoute::routes(),
       JalurRoute::routes(),
-      GaleriRoute::routes()
+      GaleriRoute::routes(),
+      AcaraRoute::routes(),
+      AuthRoute::routes(),
+      PenginapanRoute::routes(),
+      TribunRoute::routes(),
     );
   }
 
@@ -43,7 +47,7 @@ class Router
       }
     }
 
-    $this->sendResponse(ResponseHelper::notFound('Route not found'));
+    $this->sendResponse(ResponseHelper::notFound('Anda salah haluan mas, silahkan pindah ke jalur yang benar!'));
   }
 
   private function getCleanPath(): string
