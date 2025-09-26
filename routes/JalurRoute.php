@@ -15,6 +15,7 @@ class JalurRoute
       ],
       'POST' => [
         '/jalur' => [JalurHandler::class, 'create'],
+        '/jalur/upload-galeri' => [JalurHandler::class, 'uploadGaleriImages'],
       ],
     ];
   }

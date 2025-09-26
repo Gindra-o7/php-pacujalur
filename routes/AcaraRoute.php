@@ -16,6 +16,7 @@ class AcaraRoute
       ],
       'POST' => [
         '/acara' => [AcaraHandler::class, 'create'],
+        '/acara/upload-image' => [AcaraHandler::class, 'uploadImage'],
       ],
       'PUT' => [
         '/acara/{id}' => [AcaraHandler::class, 'update'],

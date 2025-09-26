@@ -16,6 +16,8 @@ class PenginapanRoute
       ],
       'POST' => [
         '/penginapan' => [PenginapanHandler::class, 'create'],
+        '/penginapan/upload-main-image' => [PenginapanHandler::class, 'uploadMainImage'],
+        '/penginapan/upload-galeri' => [PenginapanHandler::class, 'uploadGaleriImages'],
       ],
       'PUT' => [
         '/penginapan/{id}' => [PenginapanHandler::class, 'update'],
