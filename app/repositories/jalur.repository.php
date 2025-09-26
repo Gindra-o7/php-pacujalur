@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use Config\DatabaseConfig; // PERBAIKAN: Gunakan namespace yang benar
+use Configs\DatabaseConfig;
 use PDO;
 use Exception;
 
