@@ -1,6 +1,36 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+// Manual Autoloader
+spl_autoload_register(function ($class) {
+    // Definisikan namespace prefix dan direktori dasarnya
+    $prefixes = [
+        'App\\' => __DIR__ . '/../app/',
+        'Configs\\' => __DIR__ . '/../configs/',
+        'Middlewares\\' => __DIR__ . '/../middlewares/',
+        'Routes\\' => __DIR__ . '/../routes/',
+    ];
+
+    foreach ($prefixes as $prefix => $base_dir) {
+        // Cek apakah kelas menggunakan prefix ini
+        $len = strlen($prefix);
+        if (strncmp($prefix, $class, $len) !== 0) {
+            continue;
+        }
+
+        // Dapatkan nama kelas relatif
+        $relative_class = substr($class, $len);
+
+        // Ganti namespace separator dengan directory separator dan tambahkan .php
+        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+
+        // Jika file ada, include file tersebut
+        if (file_exists($file)) {
+            require $file;
+            return;
+        }
+    }
+});
+
 
 if (file_exists('../.env')) {
   $lines = file('../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

@@ -4,8 +4,6 @@ namespace Middlewares;
 
 use App\Helpers\ResponseHelper;
 use Configs\DatabaseConfig;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Exception;
 use PDO;
 
@@ -20,6 +18,18 @@ class AuthMiddleware
     self::$jwtSecret = $_ENV['JWT_SECRET'] ?? 'default_secret_key_change_this';
   }
 
+  // Fungsi helper untuk base64url encoding
+  private static function base64url_encode(string $data): string
+  {
+    return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+  }
+
+  // Fungsi helper untuk base64url decoding
+  private static function base64url_decode(string $data): string
+  {
+    return base64_decode(str_replace(['-', '_'], ['+', '/'], $data));
+  }
+
   /**
    * Middleware untuk memverifikasi token JWT dan role admin
    */
@@ -27,7 +37,6 @@ class AuthMiddleware
   {
     self::init();
 
-    // Ambil authorization header
     $headers = getallheaders();
     $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? null;
 
@@ -36,36 +45,60 @@ class AuthMiddleware
       return false;
     }
 
-    // Extract token dari "Bearer TOKEN"
     if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
       self::sendUnauthorizedResponse('Format token tidak valid');
       return false;
     }
 
     $token = $matches[1];
+    $parts = explode('.', $token);
+
+    if (count($parts) !== 3) {
+      self::sendUnauthorizedResponse('Token tidak valid: struktur salah');
+      return false;
+    }
+
+    [$header, $payload, $signature] = $parts;
+    
+    $decoded_header = self::base64url_decode($header);
+    $decoded_payload = self::base64url_decode($payload);
+    
+    // Verifikasi signature
+    $expected_signature = hash_hmac('sha256', "$header.$payload", self::$jwtSecret, true);
+    $expected_base64_signature = self::base64url_encode($expected_signature);
+
+    if (!hash_equals($expected_base64_signature, $signature)) {
+        self::sendUnauthorizedResponse('Token tidak valid: signature tidak cocok');
+        return false;
+    }
+
+    $decoded = json_decode($decoded_payload);
+
+    // Cek waktu kedaluwarsa
+    if (isset($decoded->exp) && $decoded->exp < time()) {
+        self::sendUnauthorizedResponse('Token telah kedaluwarsa');
+        return false;
+    }
 
     try {
-      // Decode JWT token
-      $decoded = JWT::decode($token, new Key(self::$jwtSecret, 'HS256'));
-      
-      // Verifikasi user masih ada di database
-      $stmt = self::$db->prepare("SELECT email, role FROM users WHERE email = ? AND role = 'ADMIN'");
-      $stmt->execute([$decoded->email]);
-      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Verifikasi user masih ada di database
+        $stmt = self::$db->prepare("SELECT email, role FROM users WHERE email = ? AND role = 'ADMIN'");
+        $stmt->execute([$decoded->email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      if (!$user) {
-        self::sendUnauthorizedResponse('User tidak ditemukan atau bukan admin');
-        return false;
-      }
+        if (!$user) {
+            self::sendUnauthorizedResponse('User tidak ditemukan atau bukan admin');
+            return false;
+        }
 
-      // Set user data untuk digunakan handler lainnya
-      $_SESSION['user'] = $user;
-      
-      return true;
+        // Set user data untuk digunakan handler lainnya
+        $_SESSION['user'] = $user;
+        
+        return true;
 
     } catch (Exception $e) {
-      self::sendUnauthorizedResponse('Token tidak valid: ' . $e->getMessage());
-      return false;
+        self::sendUnauthorizedResponse('Token tidak valid: ' . $e->getMessage());
+        return false;
     }
   }
 
@@ -75,7 +108,15 @@ class AuthMiddleware
   public static function generateToken(array $userData): string
   {
     self::init();
-
+    
+    // Header
+    $header = [
+        'alg' => 'HS256',
+        'typ' => 'JWT'
+    ];
+    $header_encoded = self::base64url_encode(json_encode($header));
+    
+    // Payload
     $payload = [
       'iss' => $_ENV['APP_NAME'] ?? 'PacuJalur API',
       'iat' => time(),
@@ -83,8 +124,13 @@ class AuthMiddleware
       'email' => $userData['email'],
       'role' => $userData['role']
     ];
+    $payload_encoded = self::base64url_encode(json_encode($payload));
 
-    return JWT::encode($payload, self::$jwtSecret, 'HS256');
+    // Signature
+    $signature = hash_hmac('sha256', "$header_encoded.$payload_encoded", self::$jwtSecret, true);
+    $signature_encoded = self::base64url_encode($signature);
+    
+    return "$header_encoded.$payload_encoded.$signature_encoded";
   }
 
   /**
