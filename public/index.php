@@ -1,35 +1,53 @@
 <?php
 
 // Manual Autoloader
-spl_autoload_register(function ($class) {
-    // Definisikan namespace prefix dan direktori dasarnya
-    $prefixes = [
-        'App\\' => __DIR__ . '/../app/',
-        'Configs\\' => __DIR__ . '/../configs/',
-        'Middlewares\\' => __DIR__ . '/../middlewares/',
-        'Routes\\' => __DIR__ . '/../routes/',
-    ];
+// Helpers
+require_once __DIR__ . '/../app/helpers/PaginationHelper.php';
+require_once __DIR__ . '/../app/helpers/ResponseHelper.php';
+require_once __DIR__ . '/../app/helpers/UploadHelper.php';
+require_once __DIR__ . '/../app/helpers/ValidationHelper.php';
 
-    foreach ($prefixes as $prefix => $base_dir) {
-        // Cek apakah kelas menggunakan prefix ini
-        $len = strlen($prefix);
-        if (strncmp($prefix, $class, $len) !== 0) {
-            continue;
-        }
+// Configs
+require_once __DIR__ . '/../configs/DatabaseConfig.php';
 
-        // Dapatkan nama kelas relatif
-        $relative_class = substr($class, $len);
+// Middlewares
+require_once __DIR__ . '/../middlewares/AuthMiddleware.php';
 
-        // Ganti namespace separator dengan directory separator dan tambahkan .php
-        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+// Repositories
+require_once __DIR__ . '/../app/repositories/AcaraRepository.php';
+require_once __DIR__ . '/../app/repositories/AuthRepository.php';
+require_once __DIR__ . '/../app/repositories/GaleriRepository.php';
+require_once __DIR__ . '/../app/repositories/JalurRepository.php';
+require_once __DIR__ . '/../app/repositories/PenginapanRepository.php';
+require_once __DIR__ . '/../app/repositories/TribunRepository.php';
 
-        // Jika file ada, include file tersebut
-        if (file_exists($file)) {
-            require $file;
-            return;
-        }
-    }
-});
+// Services
+require_once __DIR__ . '/../app/services/AcaraService.php';
+require_once __DIR__ . '/../app/services/AuthService.php';
+require_once __DIR__ . '/../app/services/GaleriService.php';
+require_once __DIR__ . '/../app/services/GlobalService.php';
+require_once __DIR__ . '/../app/services/JalurService.php';
+require_once __DIR__ . '/../app/services/PenginapanService.php';
+require_once __DIR__ . '/../app/services/TribunService.php';
+
+// Handlers
+require_once __DIR__ . '/../app/handlers/AcaraHandler.php';
+require_once __DIR__ . '/../app/handlers/AuthHandler.php';
+require_once __DIR__ . '/../app/handlers/GaleriHandler.php';
+require_once __DIR__ . '/../app/handlers/GlobalHandler.php';
+require_once __DIR__ . '/../app/handlers/JalurHandler.php';
+require_once __DIR__ . '/../app/handlers/PenginapanHandler.php';
+require_once __DIR__ . '/../app/handlers/TribunHandler.php';
+
+// Routes
+require_once __DIR__ . '/../routes/AcaraRoute.php';
+require_once __DIR__ . '/../routes/AuthRoute.php';
+require_once __DIR__ . '/../routes/GaleriRoute.php';
+require_once __DIR__ . '/../routes/GlobalRoute.php';
+require_once __DIR__ . '/../routes/JalurRoute.php';
+require_once __DIR__ . '/../routes/PenginapanRoute.php';
+require_once __DIR__ . '/../routes/TribunRoute.php';
+require_once __DIR__ . '/../routes/Router.php';
 
 
 if (file_exists('../.env')) {

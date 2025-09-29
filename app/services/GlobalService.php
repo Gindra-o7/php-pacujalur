@@ -18,7 +18,7 @@ class GlobalService
       'response' => true,
       'message' => 'Cihuy, Halow Semua 👋 ~ Selamat datang di API Pacu Jalur! 🎉',
       'version' => getenv('APP_VERSION') ?: '1.0.0',
-      'contributor' => 'https://github.com/gindra-o7/be-pacujalur',
+      'contributor' => 'https://github.com/gindra-o7/php-pacujalur',
       'timezone' => "Asia/Jakarta ~ {$formattedDate} WIB",
     ];
   }
