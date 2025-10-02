@@ -30,6 +30,7 @@ class Router
       AuthRoute::routes(),
       PenginapanRoute::routes(),
       TribunRoute::routes(),
+      PublicRoute::routes()
     );
   }
 

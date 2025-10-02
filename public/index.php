@@ -20,6 +20,7 @@ require_once __DIR__ . '/../app/repositories/GaleriRepository.php';
 require_once __DIR__ . '/../app/repositories/JalurRepository.php';
 require_once __DIR__ . '/../app/repositories/PenginapanRepository.php';
 require_once __DIR__ . '/../app/repositories/TribunRepository.php';
+require_once __DIR__ . '/../app/repositories/PublicRepository.php';
 
 // Services
 require_once __DIR__ . '/../app/services/AcaraService.php';
@@ -29,6 +30,7 @@ require_once __DIR__ . '/../app/services/GlobalService.php';
 require_once __DIR__ . '/../app/services/JalurService.php';
 require_once __DIR__ . '/../app/services/PenginapanService.php';
 require_once __DIR__ . '/../app/services/TribunService.php';
+require_once __DIR__ . '/../app/services/PublicService.php';
 
 // Handlers
 require_once __DIR__ . '/../app/handlers/AcaraHandler.php';
@@ -38,6 +40,7 @@ require_once __DIR__ . '/../app/handlers/GlobalHandler.php';
 require_once __DIR__ . '/../app/handlers/JalurHandler.php';
 require_once __DIR__ . '/../app/handlers/PenginapanHandler.php';
 require_once __DIR__ . '/../app/handlers/TribunHandler.php';
+require_once __DIR__ . '/../app/handlers/PublicHandler.php';
 
 // Routes
 require_once __DIR__ . '/../routes/AcaraRoute.php';
@@ -47,6 +50,7 @@ require_once __DIR__ . '/../routes/GlobalRoute.php';
 require_once __DIR__ . '/../routes/JalurRoute.php';
 require_once __DIR__ . '/../routes/PenginapanRoute.php';
 require_once __DIR__ . '/../routes/TribunRoute.php';
+require_once __DIR__ . '/../routes/PublicRoute.php';
 require_once __DIR__ . '/../routes/Router.php';
 
 
